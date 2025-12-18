@@ -1,0 +1,47 @@
+name: Deploy to GitHub Pages
+
+on:
+  # main ব্রাঞ্চে পুশ বা পুল রিকুয়েস্ট করলেই ডেপ্লয় হবে
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # ম্যানুয়ালি রান করার অপশন দেবে (Actions ট্যাব থেকে)
+  workflow_dispatch:
+
+# এটা পেজেস ডেপ্লয়মেন্টের বিশেষ পারমিশন দরকার
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# একইসাথে একাধিক ডেপ্লয়মেন্ট রান হতে দিবে না
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # Static HTML অ্যাপ (যেমন আপনার Attendance System) এর জন্য বিল্ড স্টেপ লাগে না,
+      # তাই সরাসরি আপলোড করছি
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # রিপোজিটরির রুট ফোল্ডারের সবকিছু আপলোড হবে
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
