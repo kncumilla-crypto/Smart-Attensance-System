@@ -332,7 +332,7 @@ window.showLoginScreen = function() {
   
   if (dashboardScreen) dashboardScreen.classList.add("hidden");
   if (loginScreen) loginScreen.classList.remove("hidden");
-};
+
     // Update teacher name display
     const teacherNameDisplay = document.getElementById("teacherNameDisplay");
     if (teacherNameDisplay) {
